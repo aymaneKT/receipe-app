@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { RecipeValues } from "../../consonants";
 
+
 export default function HeroSection() {
   return (
     <div className="font-[Pacifico]">
@@ -59,7 +60,7 @@ export default function HeroSection() {
             </p>
             <Link to={"/addRecipes"}>
               <button className="p-2 px-5 bg-[#FBD6BC] text-white cursor-pointer rounded-sm ">
-                Discover
+                Add your recipe
               </button>
             </Link>
           </div>

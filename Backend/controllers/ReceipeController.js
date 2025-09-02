@@ -1,8 +1,9 @@
 import { Receipe } from "../models/ReceipeSchema.js";
-
 export const createReceipe = async (req, res) => {
   try {
     const { title, ingredients, instructions } = req.body;
+
+    const image = req.file?.filename;
     if (!title || !ingredients || !instructions) {
       return res.status(400).json({ message: "All fields are required" });
     }
@@ -10,6 +11,8 @@ export const createReceipe = async (req, res) => {
       title,
       ingredients,
       instructions,
+      image,
+      createdBy: req.user.id,
     });
     res
       .status(201)

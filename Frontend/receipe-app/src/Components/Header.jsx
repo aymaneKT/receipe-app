@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [AlreadyUser, setAlreadyUser] = useState(true);
-  const [isLogin, setIsLogIn] = useState(!!localStorage.getItem("token"));
+  const [isLogin, setIsLogIn] = useState(localStorage.getItem("token"));
 
   const handleLog = () => {
     if (isLogin) {
@@ -26,7 +26,6 @@ export default function Header() {
 
   const handleProtectRoute = (e) => {
     if (!isLogin) {
-       
     }
   };
 

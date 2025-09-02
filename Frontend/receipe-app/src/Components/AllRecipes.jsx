@@ -3,7 +3,6 @@ import axios from "axios";
 import { FaHeart } from "react-icons/fa";
 export default function AllRecipes() {
   const [recipes, setRecipes] = useState([]);
-
   useEffect(() => {
     axios
       .get("http://localhost:3000/recipes")
@@ -24,7 +23,7 @@ export default function AllRecipes() {
         >
           <div className="h-44 bg-gray-200 flex items-center justify-center">
             <img
-              src={element?.image}
+              src={`http://localhost:3000/uploads/${element?.image}`}
               alt={element?.title}
               className="object-cover h-full w-full"
             />

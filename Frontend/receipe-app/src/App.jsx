@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import MyRecipes from "./Pages/MyRecipes";
 import AddRecipe from "./Pages/AddRecipe";
 import Header from "./Components/Header";
+import Footer from "./Components/Footer";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/favorites" element={<MyFavRecipes />} />
         <Route path="/addRecipes" element={<AddRecipe />} />
       </Routes>
+      <Footer />
     </>
   );
 }

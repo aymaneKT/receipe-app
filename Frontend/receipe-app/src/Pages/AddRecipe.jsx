@@ -1,39 +1,54 @@
 import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
 export default function AddRecipe() {
-  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
   const [recipe, setRecipe] = useState({
     title: "",
     ingredients: "",
     instructions: "",
     image: "",
   });
-
   const handleInput = (e) => {
-    const val =
-      e.target.name === "ingredients"
-        ? e.target.value.split(",")
-        : e.target.name === "image"
-        ? e.target.files[0]
-        : e.target.value;
+    let val;
+    if (e.target.name === "ingredients") {
+      val = e.target.value;
+    } else if (e.target.name === "image") {
+      val = e.target.files[0];
+    } else {
+      val = e.target.value;
+    }
+
     setRecipe({ ...recipe, [e.target.name]: val });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    if (!localStorage.getItem("token")) {
+      toast.error("Login First", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        draggable: false,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
     const formData = new FormData();
-    formData.append("title", recipe.title);
-    formData.append("ingredients", recipe.ingredients);
-    formData.append("instructions", recipe.instructions);
-    if (recipe.image) formData.append("image", recipe.image);
-
+    formData.append("title", recipe?.title);
+    formData.append("ingredients", recipe?.ingredients);
+    formData.append("instructions", recipe?.instructions);
+    if (recipe.image) formData.append("image", recipe?.image);
+    const headers = {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "multipart/form-data",
+    };
     axios
       .post("http://localhost:3000/recipes", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: headers,
       })
       .then((result) => {
         toast.success(result.data.message, {
@@ -48,15 +63,15 @@ export default function AddRecipe() {
         });
         console.log(recipe);
         setRecipe({
-          ...recipe,
           title: "",
           ingredients: "",
           instructions: "",
           image: "",
         });
-        // navigate("/");
+        if (fileInputRef.current) fileInputRef.current.value = "";
       })
       .catch((error) => {
+        console.log(error);
         toast.error(error.response.data.message, {
           position: "top-right",
           autoClose: 2000,
@@ -79,7 +94,7 @@ export default function AddRecipe() {
           <form className="flex flex-col gap-4">
             <input
               onChange={handleInput}
-              value={recipe.title}
+              value={recipe?.title}
               type="text"
               name="title"
               placeholder="Title"
@@ -96,16 +111,16 @@ export default function AddRecipe() {
             <textarea
               onChange={handleInput}
               name="instructions"
-              value={recipe.instructions}
+              value={recipe?.instructions}
               placeholder="Instructions"
               className="border border-[#E5E7EB] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FBD6BC] resize-none"
               rows="4"
             ></textarea>
             <input
+              ref={fileInputRef}
               onChange={handleInput}
               type="file"
               name="image"
-              accept="image/*"
               className="border border-[#E5E7EB] rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#FBD6BC]"
             />
             <button
