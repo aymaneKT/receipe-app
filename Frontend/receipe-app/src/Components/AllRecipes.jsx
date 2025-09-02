@@ -36,7 +36,7 @@ export default function AllRecipes() {
               <button className=" px-4 py-2 bg-[#FBD6BC] text-white rounded hover:bg-[#e0bca3] transition cursor-pointer">
                 Go somewhere
               </button>
-              <FaHeart className="cursor-pointer transition-transform duration-200 hover:scale-125 hover:text-red-500"/>
+              <FaHeart className="cursor-pointer transition-transform duration-200 hover:scale-125 hover:text-red-500" />
             </div>
           </div>
         </div>

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { RecipeValues } from "../../consonants";
 
 export default function HeroSection() {
@@ -56,9 +57,11 @@ export default function HeroSection() {
               <br /> experiment with new ingredients, and turn every meal into a
               delightful experience.
             </p>
-            <button className="p-2 px-5 bg-[#FBD6BC] text-white cursor-pointer rounded-sm ">
-              Discover
-            </button>
+            <Link to={"/addRecipes"}>
+              <button className="p-2 px-5 bg-[#FBD6BC] text-white cursor-pointer rounded-sm ">
+                Discover
+              </button>
+            </Link>
           </div>
 
           {/* Right Image */}
