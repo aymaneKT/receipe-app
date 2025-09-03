@@ -1,13 +1,13 @@
 import { useState } from "react";
 import Modal from "./Modal";
 import { toast, ToastContainer } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [AlreadyUser, setAlreadyUser] = useState(true);
   const [isLogin, setIsLogIn] = useState(localStorage.getItem("token"));
-
+  const navigate = useNavigate();
   const handleLog = () => {
     if (isLogin) {
       toast.success("Logged out successfully.", {
@@ -18,14 +18,22 @@ export default function Header() {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       setIsLogIn(false);
+      navigate("/");
       return;
     } else {
       setIsOpen(true);
     }
   };
 
-  const handleProtectRoute = (e) => {
+  const handleProtectedRoute = (e) => {
     if (!isLogin) {
+      e.preventDefault();
+      setIsOpen(true);
+      toast.info("Login First", {
+        position: "top-right",
+        autoClose: 2000,
+        theme: "light",
+      });
     }
   };
 
@@ -44,13 +52,13 @@ export default function Header() {
             <Link to="/">Home</Link>
           </li>
           <li
-            onClick={handleProtectRoute}
+            onClick={handleProtectedRoute}
             className="cursor-pointer hover:text-amber-500 transition duration-200 p-2"
           >
             <Link to={isLogin ? "/favorites" : "/"}>MyFavorites</Link>
           </li>
           <li
-            onClick={handleProtectRoute}
+            onClick={handleProtectedRoute}
             className="cursor-pointer hover:text-amber-500 transition duration-200 p-2"
           >
             <Link to={isLogin ? "/myrecipes" : "/"}>MyRecipes</Link>

@@ -5,7 +5,7 @@ import { router as recipeRouter } from "./routes/RecipeRouter.js";
 import { router as userRouter } from "./routes/UserRouter.js";
 import { connectDB } from "./config/DataBase.js";
 
-dotenv.config();
+dotenv.config({ path: "../.env" });
 const app = express();
 const PORT = process.env.PORT || 5000;
 app.use("/uploads", express.static("uploads"));
