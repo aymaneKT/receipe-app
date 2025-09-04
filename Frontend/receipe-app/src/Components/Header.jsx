@@ -43,32 +43,30 @@ export default function Header() {
   return (
     <>
       <ToastContainer className={"z-50"} />
-      <header className="flex items-center justify-between w-full px-5 py-3 fixed top-0 bg-[#fdf7f2] shadow z-20">
-        {/* Logo */}
+      <header className="flex items-center justify-between w-full px-5  absolute top-0 bg-[#fdf7f2] shadow z-20">
         <img
           src="/Images/Logo.png"
           alt="Logo"
           className="h-auto w-[clamp(60px,10vw,120px)]"
         />
 
-        {/* Desktop Menu */}
         <ul className="hidden md:flex items-center gap-4 capitalize text-sm md:text-base lg:text-lg font-[Pacifico]">
-          <li className="cursor-pointer hover:text-amber-500 transition duration-200 p-2">
+          <li className="cursor-pointer hover:text-amber-500 transition duration-200 px-2">
             <Link to="/">Home</Link>
           </li>
-          <li
+          {/* <li
             onClick={handleProtectedRoute}
             className="cursor-pointer hover:text-amber-500 transition duration-200 p-2"
           >
             <Link to={isLogin ? "/favorites" : "/"}>MyFavorites</Link>
-          </li>
+          </li> */}
           <li
             onClick={handleProtectedRoute}
-            className="cursor-pointer hover:text-amber-500 transition duration-200 p-2"
+            className="cursor-pointer hover:text-amber-500 transition duration-200 px-2"
           >
             <Link to={isLogin ? "/myrecipes" : "/"}>MyRecipes</Link>
           </li>
-          <li className="cursor-pointer hover:text-amber-500 transition duration-200 p-2">
+          <li className="cursor-pointer hover:text-amber-500 transition duration-200 px-2">
             <Link to="/contact">Contact</Link>
           </li>
           <li
@@ -79,16 +77,18 @@ export default function Header() {
           </li>
         </ul>
 
-        {/* Mobile Menu Button */}
         <button
           className="md:hidden text-3xl"
           onClick={() => setMobileMenu(!mobileMenu)}
         >
-          {mobileMenu ? <IoClose /> : <IoMenu />}
+          {mobileMenu ? (
+            <IoClose className="cursor-pointer" />
+          ) : (
+            <IoMenu className="cursor-pointer" />
+          )}
         </button>
       </header>
 
-      {/* Mobile Menu */}
       {mobileMenu && (
         <div className="fixed top-[70px] left-0 w-full bg-[#fdf7f2] shadow-md md:hidden z-10">
           <ul className="flex flex-col items-center gap-4 py-6 text-lg font-[Pacifico]">
@@ -126,8 +126,6 @@ export default function Header() {
           </ul>
         </div>
       )}
-
-      {/* Modal */}
       {isOpen && !isLogin && (
         <Modal
           setIsOpen={setIsOpen}
