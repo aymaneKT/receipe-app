@@ -48,16 +48,25 @@ export const fetchReceipeById = async (req, res) => {
 };
 
 export const updateReceipe = async (req, res) => {
+  const userId = req.user.id;
   const { id } = req.params;
   const { title, ingredients, instructions } = req.body;
+  const image = req.file?.filename;
 
   try {
+    if (Receipe.createdBy != userId) {
+      return res
+        .status(403)
+        .json({ message: "Not allowed to update this recipe" });
+    }
     const receipe = await Receipe.findByIdAndUpdate(
       id,
       {
         title,
         ingredients,
         instructions,
+        image,
+        createdBy: userId,
       },
       { new: true }
     );
@@ -75,6 +84,12 @@ export const updateReceipe = async (req, res) => {
 export const deleteReceipe = async (req, res) => {
   const { id } = req.params;
   try {
+    const recipe = await Receipe.findById(req.params.id);
+    if (recipe.createdBy != req.user.id) {
+      return res
+        .status(403)
+        .json({ message: "Not allowed to delete this recipe" });
+    }
     const receipe = await Receipe.findByIdAndDelete(id);
     if (!receipe) {
       return res.status(404).json({ message: "Receipe not found" });

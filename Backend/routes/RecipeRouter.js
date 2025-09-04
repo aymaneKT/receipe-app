@@ -13,5 +13,5 @@ export const router = express.Router();
 router.post("/", auth, upload.single("image"), createReceipe);
 router.get("/", fetchReceipes);
 router.get("/:id", fetchReceipeById);
-router.put("/:id", updateReceipe);
-router.delete("/:id", deleteReceipe);
+router.put("/:id", auth, upload.single("image"), updateReceipe);
+router.delete("/:id", auth, deleteReceipe);

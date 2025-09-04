@@ -5,6 +5,7 @@ import MyRecipes from "./Pages/MyRecipes";
 import AddRecipe from "./Pages/AddRecipe";
 import Header from "./Components/Header";
 import Footer from "./Components/Footer";
+import Contact from "./Pages/Contact";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/myrecipes" element={<MyRecipes />} />
         <Route path="/favorites" element={<MyFavRecipes />} />
         <Route path="/addRecipes" element={<AddRecipe />} />
+        <Route path="/contact" element={<Contact />} />
       </Routes>
       <Footer />
     </>

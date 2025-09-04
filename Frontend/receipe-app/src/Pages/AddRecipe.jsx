@@ -2,13 +2,22 @@ import { useState } from "react";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useRef } from "react";
-export default function AddRecipe() {
+import { IoMdClose } from "react-icons/io";
+import { Receipe } from "../../../../Backend/models/ReceipeSchema";
+export default function AddRecipe({
+  setIsEditing,
+  isEditing,
+  recipeToEdit,
+  setRecipes,
+  recipes,
+}) {
   const fileInputRef = useRef(null);
   const [recipe, setRecipe] = useState({
-    title: "",
-    ingredients: "",
-    instructions: "",
-    image: "",
+    _id: isEditing ? recipeToEdit._id : "",
+    title: isEditing ? recipeToEdit.title : "",
+    ingredients: isEditing ? recipeToEdit.ingredients : "",
+    instructions: isEditing ? recipeToEdit.instructions : "",
+    image: isEditing ? recipeToEdit.image : "",
   });
   const handleInput = (e) => {
     let val;
@@ -37,19 +46,25 @@ export default function AddRecipe() {
       });
       return;
     }
+    const url = "http://localhost:3000/recipes";
     const formData = new FormData();
     formData.append("title", recipe?.title);
     formData.append("ingredients", recipe?.ingredients);
     formData.append("instructions", recipe?.instructions);
     if (recipe.image) formData.append("image", recipe?.image);
+
     const headers = {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "multipart/form-data",
     };
-    axios
-      .post("http://localhost:3000/recipes", formData, {
-        headers: headers,
-      })
+    const api = isEditing
+      ? axios.put(`${url}/${recipe._id}`, formData, {
+          headers: headers,
+        })
+      : axios.post(url, formData, {
+          headers: headers,
+        });
+    api
       .then((result) => {
         toast.success(result.data.message, {
           position: "top-right",
@@ -61,7 +76,19 @@ export default function AddRecipe() {
           progress: undefined,
           theme: "light",
         });
-        console.log(recipe);
+        setRecipes(
+          recipes.map((e) =>
+            e._id === recipe._id
+              ? {
+                  ...e,
+                  title: recipe.title,
+                  ingredients: recipe.ingredients,
+                  instructions: recipe.instructions,
+                  image: recipe.image,
+                }
+              : recipe
+          )
+        );
         setRecipe({
           title: "",
           ingredients: "",
@@ -81,16 +108,29 @@ export default function AddRecipe() {
           progress: undefined,
           theme: "light",
         });
+      })
+      .finally(() => {
+        setIsEditing(false);
       });
   };
+
   return (
     <>
       <ToastContainer />
-      <div className="min-h-screen bg-[#fdf7f2] flex items-center justify-center p-4">
-        <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg font-[Pacifico] border-2 border-[#E5E7EB]">
+      <div className="min-h-screen bg-[#fdf7f2] flex items-center  justify-center p-4 absolute top-0 bottom-0 right-0 left-0">
+        <div className="bg-white rounded-lg relative shadow-lg p-8 w-full max-w-lg font-[Pacifico] border-2 border-[#E5E7EB]">
           <h2 className="text-3xl mb-6 text-center text-[#FBD6BC] font-semibold">
-            Add New Recipe
+            {isEditing ? "Edit Your Recipe" : "Add New Recipe"}
           </h2>
+          <IoMdClose
+            onClick={() => {
+              setIsEditing(false);
+            }}
+            className={`${
+              isEditing ? "absolute" : "hidden"
+            } absolute top-[2%] right-[2%] cursor-pointer text-2xl transition duration-200 hover:text-red-500`}
+          />
+
           <form className="flex flex-col gap-4">
             <input
               onChange={handleInput}
@@ -128,7 +168,7 @@ export default function AddRecipe() {
               type="submit"
               className="bg-[#FBD6BC] text-white rounded py-2 hover:bg-[#e0bca3] transition cursor-pointer"
             >
-              Add Recipe
+              {isEditing ? "Edit Receipe " : "Add Receipe"}
             </button>
           </form>
         </div>
